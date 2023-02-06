@@ -1,5 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Image,
   TouchableOpacity,
@@ -8,16 +7,11 @@ import {
   View,
   TextInput,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const Login = () => {
   const navigation = useNavigation();
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, []);
 
   const [isSecureEntry, setIsSecureEntry] = useState(true);
 
