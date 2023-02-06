@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import {
   Image,
   TouchableOpacity,
@@ -19,6 +19,8 @@ const Login = () => {
     });
   }, []);
 
+  const [isSecureEntry, setIsSecureEntry] = useState(true);
+
   return (
     <KeyboardAwareScrollView>
       <View style={styles.parent}>
@@ -32,7 +34,21 @@ const Login = () => {
 
         <View style={styles.body}>
           <TextInput style={styles.input} placeholder="Email" />
-          <TextInput style={styles.input} placeholder="Password" />
+          <TextInput
+            style={styles.input}
+            secureTextEntry={isSecureEntry}
+            icon={
+              <TouchableOpacity
+                onPress={() => {
+                  setIsSecureEntry((prev) => !prev);
+                }}
+              >
+                <Text>Show</Text>
+              </TouchableOpacity>
+            }
+            iconPosition="right"
+            placeholder="Password"
+          />
           <TouchableOpacity
             style={styles.button}
             onPress={() => navigation.navigate("Home")}
