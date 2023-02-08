@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Component } from "react";
 import {
   Image,
   TouchableOpacity,
@@ -9,58 +9,71 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import firebase from 'firebase/compat';
 
-const Login = () => {
-  const navigation = useNavigation();
+export default class Login extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      password: ''
+    }
+  }
 
-  const [isSecureEntry, setIsSecureEntry] = useState(true);
+  onSignIn = () => {
+    const { email, password } = this.state;
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then((result) => {
+        console.log(`Sign in: ${email}, ${password}`);
+      })
+      .catch((error) => alert(error))
+  }
 
-  return (
-    <KeyboardAwareScrollView>
-      <View style={styles.parent}>
-        <View style={styles.container}>
-          <Image
-            source={require("../../assets/Students.png")}
-            style={styles.img}
-          />
-          <Text style={styles.title}>Student Management App</Text>
+  render() {
+    return (
+      <KeyboardAwareScrollView>
+        <View style={styles.parent}>
+          <View style={styles.container}>
+            <Image
+              source={require("../../assets/Students.png")}
+              style={styles.img}
+            />
+            <Text style={styles.title}>Student Management App</Text>
+          </View>
+
+          <View style={styles.body}>
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              onChangeText={(email) => this.setState({ email })}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              onChangeText={(password) => this.setState({ password })}
+              secureTextEntry
+            />
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => this.onSignIn()}
+            >
+              <Text style={{ color: "#fff", fontWeight: "bold" }}>
+                Se Connecter
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.footer}>
+            <Text>Mot de pass oubliée?</Text>
+            <Text style={styles.contact}>Contacter votre prof</Text>
+          </View>
         </View>
-
-        <View style={styles.body}>
-          <TextInput style={styles.input} placeholder="Email" />
-          <TextInput
-            style={styles.input}
-            secureTextEntry={isSecureEntry}
-            icon={
-              <TouchableOpacity
-                onPress={() => {
-                  setIsSecureEntry((prev) => !prev);
-                }}
-              >
-                <Text>Show</Text>
-              </TouchableOpacity>
-            }
-            iconPosition="right"
-            placeholder="Password"
-          />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("Home")}
-          >
-            <Text style={{ color: "#fff", fontWeight: "bold" }}>
-              Se Connecter
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.footer}>
-          <Text>Mot de pass oubliée?</Text>
-          <Text style={styles.contact}>Contacter votre prof</Text>
-        </View>
-      </View>
-    </KeyboardAwareScrollView>
-  );
-};
+      </KeyboardAwareScrollView>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   parent: {
@@ -112,5 +125,3 @@ const styles = StyleSheet.create({
     marginBottom: "10%",
   },
 });
-
-export default Login;

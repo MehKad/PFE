@@ -1,13 +1,15 @@
-import React from "react";
+import React, { Component } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-const Home = () => {
-  return (
-    <View style={styles.container}>
-      <Text>Home</Text>
-    </View>
-  );
-};
+export default class Home extends Component {
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text>Home</Text>
+      </View>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -16,5 +18,3 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   }
 });
-
-export default Home;
