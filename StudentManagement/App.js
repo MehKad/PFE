@@ -1,12 +1,18 @@
 import React, { Component } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import * as firebase from 'firebase/compat';
+import * as firebase from "firebase/compat";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import Login from "./components/auth/Login";
-import Home from "./components/home/Home";
+import Home from "./components/screens/Home";
+import Profile from "./components/screens/Profile";
+import Notification from "./components/screens/Notification";
+import Annonce from "./components/screens/Annonce";
 
 const Stack = createNativeStackNavigator();
+const Tab = createMaterialBottomTabNavigator();
 
 //? Firebase config
 const firebaseConfig = {
@@ -16,7 +22,7 @@ const firebaseConfig = {
   storageBucket: "pfe-studentmanagement.appspot.com",
   messagingSenderId: "144914160641",
   appId: "1:144914160641:web:d4a6068f2a21103c4e7400",
-  measurementId: "G-QR9Z4PLMFZ"
+  measurementId: "G-QR9Z4PLMFZ",
 };
 
 if (firebase.apps.length === 0) {
@@ -28,13 +34,13 @@ export default class App extends Component {
     super(props);
     this.state = {
       loggedIn: false,
-    }
+    };
   }
 
   componentDidMount() {
     firebase.auth().onAuthStateChanged((user) => {
       this.setState({ loggedIn: user });
-    })
+    });
   }
 
   render() {
@@ -43,13 +49,51 @@ export default class App extends Component {
       return (
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Login">
-            <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{ headerShown: false }}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       );
     }
     return (
-      <Home />
-    )
+      <NavigationContainer>
+        <Tab.Navigator initialRouteName="Login">
+          <Tab.Screen
+            options={{
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="home" color={color} size={26} />
+              ),
+            }}
+            name="Home"
+            component={Home}
+          />
+          <Tab.Screen
+            options={{
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="bell" color={color} size={26} />
+              ),
+            }}
+            name="Notification"
+            component={Notification}
+          />
+          <Tab.Screen
+            options={{
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons
+                  name="account-circle"
+                  color={color}
+                  size={26}
+                />
+              ),
+            }}
+            name="Profile"
+            component={Profile}
+          />
+        </Tab.Navigator>
+      </NavigationContainer>
+    );
   }
 }
