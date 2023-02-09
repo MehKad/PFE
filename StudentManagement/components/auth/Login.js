@@ -7,7 +7,6 @@ import {
   View,
   TextInput,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import firebase from 'firebase/compat';
 

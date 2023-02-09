@@ -1,22 +1,24 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { getAuth, signOut } from "firebase/auth";
+import firebase from "firebase/compat";
 
 export default class Profile extends Component {
   onLogOut = () => {
-    const auth = getAuth();
-    signOut(auth)
-      .then(() => {
-        console.log("Signed out");
-      })
+    firebase
+      .auth()
+      .signOut()
+      .then(() => console.log("Signed out"))
       .catch((error) => alert(error));
-  };
+  }
 
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity style={styles.button} onPress={() => this.onLogOut()}>
-          <Text style={{ color: "#fff", fontWeight: "bold" }}>Logout</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => this.onLogOut()}
+        >
+          <Text style={styles.buttonText}>Logout</Text>
         </TouchableOpacity>
       </View>
     );
@@ -40,5 +42,9 @@ const styles = StyleSheet.create({
     paddingRight: 120,
     marginTop: "5%",
     marginBottom: "10%",
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "bold"
   },
 });

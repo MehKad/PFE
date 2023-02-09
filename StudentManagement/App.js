@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import * as firebase from "firebase/compat";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import * as firebase from "firebase/compat";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import Login from "./components/auth/Login";
@@ -62,35 +62,31 @@ export default class App extends Component {
       <NavigationContainer>
         <Tab.Navigator initialRouteName="Login">
           <Tab.Screen
+            name="Home"
+            component={Home}
             options={{
               tabBarIcon: ({ color }) => (
                 <MaterialCommunityIcons name="home" color={color} size={26} />
-              ),
+              )
             }}
-            name="Home"
-            component={Home}
           />
           <Tab.Screen
+            name="Notification"
+            component={Notification}
             options={{
               tabBarIcon: ({ color }) => (
                 <MaterialCommunityIcons name="bell" color={color} size={26} />
-              ),
+              )
             }}
-            name="Notification"
-            component={Notification}
           />
           <Tab.Screen
-            options={{
-              tabBarIcon: ({ color }) => (
-                <MaterialCommunityIcons
-                  name="account-circle"
-                  color={color}
-                  size={26}
-                />
-              ),
-            }}
             name="Profile"
             component={Profile}
+            options={{
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="account" color={color} size={26} />
+              )
+            }}
           />
         </Tab.Navigator>
       </NavigationContainer>
