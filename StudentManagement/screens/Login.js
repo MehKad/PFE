@@ -8,15 +8,15 @@ import {
   TextInput,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import firebase from 'firebase/compat';
+import firebase from "firebase/compat";
 
 export default class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      password: ''
-    }
+      email: "",
+      password: "",
+    };
   }
 
   onSignIn = () => {
@@ -27,8 +27,8 @@ export default class Login extends Component {
       .then((result) => {
         console.log(`Sign in: ${email}, ${password}`);
       })
-      .catch((error) => alert(error))
-  }
+      .catch((error) => alert(error));
+  };
 
   render() {
     return (
@@ -36,7 +36,7 @@ export default class Login extends Component {
         <View style={styles.parent}>
           <View style={styles.container}>
             <Image
-              source={require("../../assets/Students.png")}
+              source={require("../assets/Students.png")}
               style={styles.img}
             />
             <Text style={styles.title}>Student Management App</Text>
