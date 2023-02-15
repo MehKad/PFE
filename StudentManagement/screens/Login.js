@@ -6,6 +6,7 @@ import {
   Text,
   View,
   TextInput,
+  Linking,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import firebase from "firebase/compat";
@@ -66,7 +67,15 @@ export default class Login extends Component {
 
           <View style={styles.footer}>
             <Text>Mot de pass oubliée?</Text>
-            <Text style={styles.contact}>Contacter votre prof</Text>
+            <TouchableOpacity
+              onPress={() =>
+                Linking.openURL(
+                  "mailto:mehkadiri@gmail.com?subject=Forgotten password&body=I have forgotten my password, can you reset it?"
+                )
+              }
+            >
+              <Text style={styles.contact}>Contacter votre prof</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </KeyboardAwareScrollView>
