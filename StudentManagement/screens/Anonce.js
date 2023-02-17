@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-export default class Annonce extends Component {
+export default class Anonce extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Annonce</Text>
+        <Text>Anonce</Text>
       </View>
     );
   }
