@@ -1,16 +1,38 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { bindActionCreators } from "redux";
+import { connect } from 'react-redux';
 
-export default class Home extends Component {
+import { fetchUser } from "../redux/actions";
+
+class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
       date: "",
     };
   }
+
+  componentDidMount() {
+    this.props.fetchUser();
+  }
+
   render() {
+    const { currentUser } = this.props;
+    console.log(currentUser);
+    if (!currentUser) {
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator
+            size='large'
+            color='white'
+          />
+
+        </View>
+      )
+    }
     return (
       <View style={styles.container}>
         <View
@@ -24,7 +46,7 @@ export default class Home extends Component {
           <Text
             style={{ color: "white", fontSize: 30, fontFamily: "monospace" }}
           >
-            Kadiri Mehdi
+            {currentUser.full_name}
           </Text>
         </View>
         <View style={{ flex: 2 }}>
@@ -104,3 +126,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
 });
+
+const mapStateToProps = (store) => ({
+  currentUser: store.userState.currentUser
+});
+const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUser }, dispatch);
+
+
+export default connect(mapStateToProps, mapDispatchProps)(Home);
