@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Calendar } from "react-native-calendars";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { bindActionCreators } from "redux";
 import { connect } from 'react-redux';
 
@@ -89,15 +89,15 @@ class Home extends Component {
         </View>
         <View style={styles.bottom}>
           <TouchableOpacity style={{ alignItems: "center" }}>
-            <MaterialCommunityIcons name="clock" size={50} />
+            <MaterialCommunityIcons name="timetable" size={50} />
             <Text>Time Table</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{ alignItems: "center" }}>
-            <MaterialCommunityIcons name="book-open" size={50} />
+            <MaterialCommunityIcons name="book-open-outline" size={50} />
             <Text>Exams</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{ alignItems: "center" }}>
-            <MaterialCommunityIcons name="book-check" size={50} />
+            <MaterialCommunityIcons name="book-check-outline" size={50} />
             <Text>Results</Text>
           </TouchableOpacity>
         </View>

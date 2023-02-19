@@ -21,14 +21,8 @@ class Profile extends Component {
 
   render() {
     const { currentUser } = this.props;
-    const test = new Date(currentUser.date_birth.seconds * 1000);
-    var formatted =
-      ("0" + test.getDate()).slice(-2) +
-      "-" +
-      (test.getMonth() + 1) +
-      "-" +
-      test.getFullYear() +
-      " ";
+    const date = new Date(currentUser.date_birth.seconds * 1000);
+    var date_birth = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
     if (!currentUser) {
       return (
         <View style={styles.container}>
@@ -75,7 +69,7 @@ class Profile extends Component {
           <Text style={styles.data}>{currentUser.id}</Text>
           <Seperator />
           <Text style={styles.title}>Date of birth</Text>
-          <Text style={styles.data}>{formatted}</Text>
+          <Text style={styles.data}>{date_birth}</Text>
         </View>
         <View style={styles.bottom}>
           <TouchableOpacity
