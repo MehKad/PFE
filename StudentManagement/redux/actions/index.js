@@ -1,6 +1,6 @@
 import firebase from 'firebase/compat';
 
-import { USER_STATE_CHANGE } from '../constants';
+import { USER_STATE_CHANGE, CLEAR_DATA } from '../constants';
 
 export function fetchUser() {
     return ((dispatch) => {
@@ -16,5 +16,11 @@ export function fetchUser() {
                     console.log('does not exist');
                 }
             })
+    })
+}
+
+export function clearData() {
+    return ((dispatch) => {
+        dispatch({ type: CLEAR_DATA });
     })
 }

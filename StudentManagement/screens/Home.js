@@ -2,10 +2,7 @@ import React, { Component } from "react";
 import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { bindActionCreators } from "redux";
-import { connect } from 'react-redux';
-
-import { fetchUser } from "../redux/actions";
+import { connect } from "react-redux";
 
 class Home extends Component {
   constructor(props) {
@@ -15,13 +12,8 @@ class Home extends Component {
     };
   }
 
-  componentDidMount() {
-    this.props.fetchUser();
-  }
-
   render() {
     const { currentUser } = this.props;
-    console.log(currentUser);
     if (!currentUser) {
       return (
         <View style={styles.container}>
@@ -130,7 +122,5 @@ const styles = StyleSheet.create({
 const mapStateToProps = (store) => ({
   currentUser: store.userState.currentUser
 });
-const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUser }, dispatch);
 
-
-export default connect(mapStateToProps, mapDispatchProps)(Home);
+export default connect(mapStateToProps, null)(Home);

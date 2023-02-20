@@ -1,9 +1,15 @@
 import React, { Component } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import * as firebase from "firebase/compat";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import thunk from "redux-thunk";
 
+import Reducer from "../redux/reducers";
 import AppStack from "./AppStack";
 import AuthStack from "./AuthStack";
+
+const store = createStore(Reducer, applyMiddleware(thunk));
 
 //? Firebase config
 const firebaseConfig = {
@@ -38,7 +44,7 @@ export default class index extends Component {
     const { loggedIn } = this.state;
     return (
       <NavigationContainer>
-        {loggedIn ? <AppStack /> : <AuthStack />}
+        {loggedIn ? <Provider store={store}><AppStack /></Provider> : <AuthStack />}
       </NavigationContainer>
     );
   }

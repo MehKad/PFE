@@ -15,10 +15,6 @@ class Profile extends Component {
       .catch((error) => alert(error));
   };
 
-  componentDidMount() {
-    this.props.fetchUser();
-  }
-
   render() {
     const { currentUser } = this.props;
     const date = new Date(currentUser.date_birth.seconds * 1000);
@@ -43,7 +39,7 @@ class Profile extends Component {
           >
             Profile
           </Text>
-          <Image source={require("../assets/101.jpg")} style={styles.img} />
+          <Image source={{ uri: currentUser.image }} style={styles.img} />
           <Text
             style={{
               color: "white",
@@ -54,7 +50,7 @@ class Profile extends Component {
           >
             {currentUser.full_name}
           </Text>
-          <Text style={{ color: "white" }}>{currentUser.type}</Text>
+          <Text style={{ color: "white" }}>{currentUser.student ? 'Student' : 'Teacher'}</Text>
         </View>
         <View style={styles.body}>
           <Text style={styles.general}>General</Text>
@@ -169,7 +165,5 @@ const styles = StyleSheet.create({
 const mapStateToProps = (store) => ({
   currentUser: store.userState.currentUser,
 });
-const mapDispatchProps = (dispatch) =>
-  bindActionCreators({ fetchUser }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchProps)(Profile);
+export default connect(mapStateToProps, null)(Profile);
