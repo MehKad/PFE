@@ -1,7 +1,8 @@
-import { USER_STATE_CHANGE, CLEAR_DATA } from '../constants';
+import { USER_STATE_CHANGE, CLEAR_DATA, USER_ANNONCE_STATE_CHANGE } from '../constants';
 
 const initialState = {
-    currentUser: null
+    currentUser: null,
+    annonces: []
 }
 
 export const user = (state = initialState, action) => {
@@ -10,6 +11,12 @@ export const user = (state = initialState, action) => {
             return {
                 ...state,
                 currentUser: action.currentUser
+            };
+            break;
+        case USER_ANNONCE_STATE_CHANGE:
+            return {
+                ...state,
+                annonces: state.annonces.concat(action.annonces)
             };
             break;
         case CLEAR_DATA:

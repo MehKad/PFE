@@ -1,10 +1,7 @@
 import React, { Component } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import firebase from "firebase/compat";
-import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-
-import { fetchUser } from "../redux/actions";
 
 class Profile extends Component {
   onLogOut = () => {

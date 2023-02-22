@@ -5,7 +5,7 @@ import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 import { bindActionCreators } from "redux";
 import { connect } from 'react-redux';
 
-import { fetchUser, clearData } from "../redux/actions";
+import { fetchUser, clearData, fetchUserFollowing, fetchUserAnnonces } from "../redux/actions";
 import Home from "../screens/Home";
 import Profile from "../screens/Profile";
 import Annonce from "../screens/Annonce";
@@ -21,6 +21,7 @@ class AppStack extends Component {
   componentDidMount() {
     this.props.clearData();
     this.props.fetchUser();
+    this.props.fetchUserFollowing();
   }
 
   render() {
@@ -73,6 +74,6 @@ class AppStack extends Component {
 const mapStateToProps = (store) => ({
   currentUser: store.userState.currentUser
 });
-const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUser, clearData }, dispatch);
+const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUser, clearData, fetchUserFollowing, fetchUserAnnonces }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchProps)(AppStack);
