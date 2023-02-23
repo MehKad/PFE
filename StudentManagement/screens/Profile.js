@@ -15,7 +15,8 @@ class Profile extends Component {
   render() {
     const { currentUser } = this.props;
     const date = new Date(currentUser.date_birth.seconds * 1000);
-    var date_birth = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+    var date_birth =
+      date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
     if (!currentUser) {
       return (
         <View style={styles.container}>
@@ -31,7 +32,8 @@ class Profile extends Component {
               color: "white",
               fontWeight: "bold",
               fontSize: 30,
-              marginBottom: 5,
+              marginTop: 30,
+              paddingBottom: 5,
             }}
           >
             Profile
@@ -47,8 +49,11 @@ class Profile extends Component {
           >
             {currentUser.full_name}
           </Text>
-          <Text style={{ color: "white" }}>{currentUser.student ? 'Student' : 'Teacher'}</Text>
+          <Text style={{ color: "white" }}>
+            {currentUser.student ? "Student" : "Teacher"}
+          </Text>
         </View>
+
         <View style={styles.body}>
           <Text style={styles.general}>General</Text>
           <Text></Text>
@@ -64,7 +69,8 @@ class Profile extends Component {
           <Text style={styles.title}>Date of birth</Text>
           <Text style={styles.data}>{date_birth}</Text>
         </View>
-        <View style={styles.bottom}>
+
+        <View>
           <TouchableOpacity
             style={styles.button}
             onPress={() => this.onLogOut()}
@@ -96,8 +102,8 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingLeft: 120,
     paddingRight: 120,
-    marginTop: "5%",
-    marginBottom: "10%",
+    marginTop: 20,
+    marginBottom: 15,
   },
   buttonText: {
     color: "#fff",
@@ -105,7 +111,7 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: "#386BF6",
-    flex: 1.5,
+    flex: 2,
     width: "100%",
     borderBottomRightRadius: 30,
     borderBottomLeftRadius: 30,
@@ -114,7 +120,7 @@ const styles = StyleSheet.create({
   },
   body: {
     backgroundColor: "white",
-    flex: 2,
+    flex: 2.5,
     width: "80%",
     borderRadius: 30,
     marginTop: 20,
@@ -128,14 +134,11 @@ const styles = StyleSheet.create({
     shadowRadius: 16.0,
     elevation: 24,
   },
-  bottom: {
-    marginTop: 5,
-  },
   sep: {
     height: 1,
     width: "90%",
     backgroundColor: "#ddd",
-    margin: 20,
+    margin: 15,
   },
   img: {
     width: 100,
