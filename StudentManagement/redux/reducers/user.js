@@ -16,7 +16,7 @@ export const user = (state = initialState, action) => {
         case USER_ANNONCE_STATE_CHANGE:
             return {
                 ...state,
-                annonces: state.annonces.concat(action.annonces)
+                annonces: action.annonces
             };
             break;
         case CLEAR_DATA:

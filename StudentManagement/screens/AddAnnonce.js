@@ -1,10 +1,25 @@
 import React, { Component } from "react";
-import { FlatList, StatusBar, StyleSheet, Text, View } from "react-native";
+import { FlatList, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { connect } from "react-redux";
+import { MaterialIcons } from '@expo/vector-icons';
+import firebase from "firebase/compat";
 
 class AddAnnonce extends Component {
   constructor(props) {
     super(props);
+  }
+
+  deleteAnnoucement = (id) => {
+    firebase
+      .firestore()
+      .collection('annonces')
+      .doc(firebase.auth().currentUser.uid)
+      .collection('teacherAnnonce')
+      .doc(id)
+      .delete()
+      .then(() => {
+        console.log('Annoucement deleted');
+      })
   }
 
   render() {
@@ -26,6 +41,12 @@ class AddAnnonce extends Component {
                 <Text style={styles.title}>{item.title}</Text>
                 <Text style={styles.body}>{item.content}</Text>
                 <Text style={styles.time}>{dd}</Text>
+                <TouchableOpacity
+                  onPress={() => this.deleteAnnoucement(item.id)}
+                  style={styles.button}
+                >
+                  <MaterialIcons name="delete-outline" size={24} color='white' />
+                </TouchableOpacity>
               </View>
             );
           }}
@@ -82,6 +103,14 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     fontSize: 10,
     color: "white",
+  },
+  button: {
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#fff",
+    width: '10%',
+    marginTop: "5%",
+    marginBottom: "10%",
   },
 });
 

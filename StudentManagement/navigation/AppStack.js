@@ -21,7 +21,6 @@ class AppStack extends Component {
   componentDidMount() {
     this.props.clearData();
     this.props.fetchUser();
-    this.props.fetchUserFollowing();
   }
 
   render() {

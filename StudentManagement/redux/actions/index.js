@@ -8,10 +8,15 @@ export function fetchUser() {
             .firestore()
             .collection('users')
             .doc(firebase.auth().currentUser.uid)
-            .get()
-            .then((snapshot) => {
+            .onSnapshot((snapshot) => {
                 if (snapshot.exists) {
-                    dispatch({ type: USER_STATE_CHANGE, currentUser: snapshot.data() })
+                    let currentUser = snapshot.data();
+                    dispatch({ type: USER_STATE_CHANGE, currentUser })
+                    dispatch(
+                        currentUser.student
+                            ? fetchUserFollowing(currentUser.filiere)
+                            : fetchUserAnnonces(firebase.auth().currentUser.uid)
+                    );
                 } else {
                     console.log('does not exist');
                 }
@@ -25,40 +30,38 @@ export function clearData() {
     })
 }
 
-export function fetchUserFollowing() {
+export function fetchUserFollowing(filiere) {
     return ((dispatch) => {
         firebase
             .firestore()
-            .collection('following')
-            .doc(firebase.auth().currentUser.uid)
-            .collection('studentFollwing')
-            .get()
-            .then((snapshot) => {
+            .collection('filiere')
+            .doc(filiere)
+            .collection('teachers')
+            .onSnapshot((snapshot) => {
                 let teachers = snapshot.docs.map(teacher => {
                     return teacher.id;
                 });
-                if (!teachers.length) {
-                    teachers.push(firebase.auth().currentUser.uid)
-                }
                 teachers.forEach(uid => dispatch(fetchUserAnnonces(uid)));
             })
     })
 }
 
 export function fetchUserAnnonces(uid) {
-    return ((dispatch) => {
+    return ((dispatch, getState) => {
         firebase
             .firestore()
             .collection('annonces')
             .doc(uid)
             .collection('teacherAnnonce')
-            .get()
-            .then((snapshot) => {
+            .orderBy('date', 'desc')
+            .onSnapshot((snapshot) => {
+                const previous = getState().userState.annonces;
                 let annonces = snapshot.docs.map(doc => {
                     let annonce = doc.data();
                     let id = doc.id;
                     return { ...annonce, id };
                 });
+                annonces.concat(previous);
                 dispatch({ type: USER_ANNONCE_STATE_CHANGE, annonces })
             })
     })
