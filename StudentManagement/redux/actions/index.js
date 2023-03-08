@@ -1,22 +1,24 @@
 import firebase from 'firebase/compat';
 
-import { USER_STATE_CHANGE, CLEAR_DATA, USER_ANNONCE_STATE_CHANGE } from '../constants';
+import { USER_STATE_CHANGE, TEACHERS_STATE_CHANGE, CLEAR_DATA, USER_ANNONCE_STATE_CHANGE } from '../constants';
 
 export function fetchUser() {
+    const uid = firebase.auth().currentUser.uid;
     return ((dispatch) => {
         firebase
             .firestore()
             .collection('users')
-            .doc(firebase.auth().currentUser.uid)
+            .doc(uid)
             .onSnapshot((snapshot) => {
                 if (snapshot.exists) {
                     let currentUser = snapshot.data();
                     dispatch({ type: USER_STATE_CHANGE, currentUser })
-                    dispatch(
-                        currentUser.student
-                            ? fetchUserFollowing(currentUser.filiere)
-                            : fetchUserAnnonces(firebase.auth().currentUser.uid)
-                    );
+                    if (currentUser.student) {
+                        dispatch(fetchUserTeachers(currentUser.filiere));
+                    } else {
+                        dispatch({ type: TEACHERS_STATE_CHANGE, teachers: [{ ...currentUser, uid }] });
+                        dispatch(fetchUserAnnonces(uid));
+                    }
                 } else {
                     console.log('does not exist');
                 }
@@ -30,7 +32,7 @@ export function clearData() {
     })
 }
 
-export function fetchUserFollowing(filiere) {
+export function fetchUserTeachers(filiere) {
     return ((dispatch) => {
         firebase
             .firestore()
@@ -41,7 +43,26 @@ export function fetchUserFollowing(filiere) {
                 let teachers = snapshot.docs.map(teacher => {
                     return teacher.id;
                 });
-                teachers.forEach(uid => dispatch(fetchUserAnnonces(uid)));
+                teachers.forEach(uid => {
+                    dispatch(getTeachersData(uid));
+                    dispatch(fetchUserAnnonces(uid));
+                });
+            })
+    })
+}
+
+export function getTeachersData(uid) {
+    return ((dispatch, getState) => {
+        firebase
+            .firestore()
+            .collection('users')
+            .doc(uid)
+            .onSnapshot((snapshot) => {
+                let previous = getState().userState.teachers;
+                let teacher = snapshot.data();
+                previous = previous.filter(item => item.uid !== uid);
+                previous.push({ ...teacher, uid });
+                dispatch({ type: TEACHERS_STATE_CHANGE, teachers: previous });
             })
     })
 }
@@ -55,13 +76,19 @@ export function fetchUserAnnonces(uid) {
             .collection('teacherAnnonce')
             .orderBy('date', 'desc')
             .onSnapshot((snapshot) => {
-                const previous = getState().userState.annonces;
+                let previous = getState().userState.annonces;
                 let annonces = snapshot.docs.map(doc => {
                     let annonce = doc.data();
                     let id = doc.id;
-                    return { ...annonce, id };
+                    return { ...annonce, id, uid };
                 });
-                annonces.concat(previous);
+                const teacher = getState().userState.teachers.find(teacher => teacher.uid === uid);
+                const { name, email, image } = teacher;
+                annonces.forEach(annonce => {
+                    annonce.teacher = { name, email, image };
+                });
+                previous = previous.filter((item) => item.uid !== uid);
+                annonces = annonces.concat(previous);
                 dispatch({ type: USER_ANNONCE_STATE_CHANGE, annonces })
             })
     })

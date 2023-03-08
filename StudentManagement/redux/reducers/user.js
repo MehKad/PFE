@@ -1,8 +1,9 @@
-import { USER_STATE_CHANGE, CLEAR_DATA, USER_ANNONCE_STATE_CHANGE } from '../constants';
+import { USER_STATE_CHANGE, TEACHERS_STATE_CHANGE, CLEAR_DATA, USER_ANNONCE_STATE_CHANGE } from '../constants';
 
 const initialState = {
     currentUser: null,
-    annonces: []
+    annonces: [],
+    teachers: []
 }
 
 export const user = (state = initialState, action) => {
@@ -11,6 +12,12 @@ export const user = (state = initialState, action) => {
             return {
                 ...state,
                 currentUser: action.currentUser
+            };
+            break;
+        case TEACHERS_STATE_CHANGE:
+            return {
+                ...state,
+                teachers: action.teachers
             };
             break;
         case USER_ANNONCE_STATE_CHANGE:

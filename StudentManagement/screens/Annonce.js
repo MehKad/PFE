@@ -1,91 +1,99 @@
-import React, { Component } from "react";
-import { FlatList, StatusBar, StyleSheet, Text, View } from "react-native";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { connect } from 'react-redux';
+import firebase from 'firebase/compat';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { AnimatedFAB, Searchbar } from 'react-native-paper';
+import moment from 'moment';
+
+import AnnouncementCard from '../components/AnnouncementCard';
 
 class Annonce extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      filteredAnnouncements: [],
+    }
+  }
+
+  deleteAnnonce = (id) => {
+    firebase
+      .firestore()
+      .collection('annonces')
+      .doc(firebase.auth().currentUser.uid)
+      .collection('teacherAnnonce')
+      .doc(id)
+      .delete();
+  }
+
+  searchFilter = (query) => {
+    const { annonces } = this.props;
+    const filteredAnnouncements = annonces.filter((annonce) =>
+      annonce.title.toLowerCase().includes(query.toLowerCase())
+      || annonce.content.toLowerCase().includes(query.toLowerCase())
+    );
+    this.setState({ filteredAnnouncements: filteredAnnouncements.length ? filteredAnnouncements : [] })
   }
 
   render() {
-    const { annonces } = this.props;
+    const { currentUser, annonces } = this.props;
+    const { filteredAnnouncements } = this.state;
     return (
-      <View style={styles.container}>
-        <FlatList
-          contentContainerStyle={{ alignItems: "center" }}
-          ListHeaderComponentStyle={styles.listheader}
-          ListHeaderComponent={<Text style={styles.header}>Annonce</Text>}
-          data={annonces}
-          renderItem={({ item }) => {
-            const d = new Date(item.date.seconds * 1000);
-            var dd =
-              d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
-            return (
-              <View style={styles.posts}>
-                <Text style={styles.title}>{item.title}</Text>
-                <Text style={styles.body}>{item.content}</Text>
-                <Text style={styles.time}>{dd}</Text>
-              </View>
-            );
-          }}
+      <SafeAreaProvider style={styles.container}>
+        <Searchbar
+          placeholder='Search'
+          onChangeText={(query) => this.searchFilter(query)}
         />
-      </View>
-    );
+        <FlatList
+          data={!filteredAnnouncements.length ? annonces : filteredAnnouncements}
+          style={{ marginTop: 10 }}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => { }}>
+              <AnnouncementCard
+                title={item.title}
+                content={item.content}
+                date={moment(item.date.seconds * 1000).format("DD MMM")}
+                avatar={item.teacher.image}
+              />
+            </TouchableOpacity>
+          )}
+          ListEmptyComponent={() => (
+            <View style={{ flex: 1, alignItems: 'center' }}>
+              <Text>
+                No Availabe announcements!
+              </Text>
+            </View>
+          )}
+        />
+        {!currentUser.student ? <AnimatedFAB
+          icon={'plus'}
+          label={'Add'}
+          onPress={() => console.log('Pressed')}
+          animateFrom={'right'}
+          iconMode={'dynamic'}
+          style={styles.fabStyle}
+        /> : null}
+      </SafeAreaProvider>
+    )
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: StatusBar.currentHeight,
-    backgroundColor: "#f0ffff",
+    flexGrow: 1,
+    paddingVertical: 50,
+    paddingHorizontal: 10,
   },
-  listheader: {
-    height: 80,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  header: {
-    fontSize: 30,
-    fontWeight: "bold",
-  },
-  posts: {
-    width: 330,
-    justifyContent: "center",
-    backgroundColor: "#386BF6",
-    borderRadius: 20,
-    padding: 15,
-    margin: 15,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 12,
-    },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.0,
-    elevation: 35,
-  },
-  title: {
-    fontWeight: "bold",
-    fontSize: 15,
-    marginBottom: 15,
-    marginTop: 5,
-    textAlign: "center",
-    color: "white",
-  },
-  body: {
-    textAlign: "justify",
-    padding: 5,
-  },
-  time: {
-    textAlign: "right",
-    paddingTop: 10,
-    fontSize: 10,
-    color: "white",
-  },
+  fabStyle: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10
+  }
 });
 
 const mapStateToProps = (store) => ({
-  annonces: store.userState.annonces,
+  currentUser: store.userState.currentUser,
+  annonces: store.userState.annonces
 });
 
 export default connect(mapStateToProps, null)(Annonce);
