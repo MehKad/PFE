@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import firebase from "firebase/compat";
 import { connect } from "react-redux";
+import moment from 'moment';
 
 class Profile extends Component {
   onLogOut = () => {
@@ -14,9 +15,6 @@ class Profile extends Component {
 
   render() {
     const { currentUser } = this.props;
-    const date = new Date(currentUser.date_birth.seconds * 1000);
-    var date_birth =
-      date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
     if (!currentUser) {
       return (
         <View style={styles.container}>
@@ -67,7 +65,7 @@ class Profile extends Component {
           <Text style={styles.data}>{currentUser.id}</Text>
           <Seperator />
           <Text style={styles.title}>Date of birth</Text>
-          <Text style={styles.data}>{date_birth}</Text>
+          <Text style={styles.data}>{moment(currentUser.date_birth.seconds * 1000).format('L')}</Text>
         </View>
 
         <View>
@@ -159,8 +157,6 @@ const styles = StyleSheet.create({
     paddingLeft: "5%",
   },
 });
-
-// data
 
 const mapStateToProps = (store) => ({
   currentUser: store.userState.currentUser,
