@@ -83,13 +83,14 @@ export function fetchUserAnnonces(uid) {
                     return { ...annonce, id, uid };
                 });
                 const teacher = getState().userState.teachers.find(teacher => teacher.uid === uid);
-                const { name, email, image } = teacher;
+                const { full_name, email, image } = teacher;
                 annonces.forEach(annonce => {
-                    annonce.teacher = { name, email, image };
+                    annonce.teacher = { full_name, email, image };
                 });
                 previous = previous.filter((item) => item.uid !== uid);
                 annonces = annonces.concat(previous);
-                dispatch({ type: USER_ANNONCE_STATE_CHANGE, annonces })
+                annonces.sort((a, b) => new Date(b.date.seconds * 1000) - new Date(a.date.seconds * 1000));
+                dispatch({ type: USER_ANNONCE_STATE_CHANGE, annonces });
             })
     })
 }
