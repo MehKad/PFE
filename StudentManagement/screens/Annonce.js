@@ -23,7 +23,10 @@ class Annonce extends Component {
       .doc(firebase.auth().currentUser.uid)
       .collection('teacherAnnonce')
       .doc(id)
-      .delete();
+      .delete()
+      .then(() => {
+        console.log('Delete announcement');
+      });
   }
 
   searchFilter = (query) => {
@@ -31,6 +34,7 @@ class Annonce extends Component {
     const filteredAnnouncements = annonces.filter((annonce) =>
       annonce.title.toLowerCase().includes(query.toLowerCase())
       || annonce.content.toLowerCase().includes(query.toLowerCase())
+      || annonce.teacher.full_name.toLowerCase().includes(query.toLowerCase())
     );
     this.setState({ filteredAnnouncements: filteredAnnouncements.length ? filteredAnnouncements : [] })
   }
@@ -50,10 +54,14 @@ class Annonce extends Component {
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => { }}>
               <AnnouncementCard
+                id={item.id}
                 title={item.title}
                 content={item.content}
-                date={moment(item.date.seconds * 1000).format("DD MMM")}
+                date={moment(item.date.seconds * 1000).format("LL")}
                 avatar={item.teacher.image}
+                teacherName={item.teacher.full_name}
+                teacher={!currentUser.student}
+                deleteAnnonce={this.deleteAnnonce}
               />
             </TouchableOpacity>
           )}
@@ -81,7 +89,7 @@ class Annonce extends Component {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    paddingVertical: 50,
+    paddingTop: 50,
     paddingHorizontal: 10,
   },
   fabStyle: {
