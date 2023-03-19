@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View } from "react-native";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { bindActionCreators } from "redux";
 import { connect } from 'react-redux';
 import { Button } from 'react-native-paper';
@@ -39,27 +39,25 @@ class AppStack extends Component {
           activeColor="#386BF6"
           inactiveColor="#9DB2CE"
           screenOptions={({ route }) => ({
-            tabBarIcon: ({ color, size = 24 }) => {
+            tabBarIcon: ({ focused, color }) => {
               let iconName;
               switch (route.name) {
                 case 'Home':
-                  iconName = 'home';
-                  return <AntDesign name={iconName} size={size} color={color} />;
+                  iconName = focused ? 'home' : 'home-outline';
                   break;
                 case 'Annonce':
-                  iconName = 'notification';
-                  return <AntDesign name={iconName} size={size} color={color} />;
+                  iconName = focused ? 'megaphone' : 'megaphone-outline';
                   break;
                 case 'Profile':
-                  iconName = 'user-circle';
-                  return <FontAwesome5 name={iconName} size={size} color={color} />;
+                  iconName = focused ? 'person-circle' : 'person-circle-outline';
                   break;
               }
+              return <Ionicons name={iconName} size={24} color={color} />;
             }
           })}
         >
           <Tab.Screen name="Home" component={Home} />
-          <Tab.Screen name="Annonce" component={Annonce} />
+          <Tab.Screen name="Annonce" component={Annonce} options={{ tabBarBadge: true }} />
           <Tab.Screen name="Profile" component={Profile} />
         </Tab.Navigator>
       );
