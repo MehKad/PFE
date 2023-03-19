@@ -1,85 +1,58 @@
 import React, { Component } from "react";
-import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Calendar } from "react-native-calendars";
+import { StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Agenda } from "react-native-calendars";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { ListItem, Avatar } from 'react-native-elements';
 import { connect } from "react-redux";
+import moment from 'moment';
 
 class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      date: "",
-    };
   }
 
-  render() {
-    const { currentUser } = this.props;
-    if (!currentUser) {
-      return (
-        <View style={styles.container}>
-          <ActivityIndicator
-            size='large'
-            color='white'
-          />
+  renderItem = (item) => (
+    <ListItem>
+      <Avatar source={{ uri: item.teacher.image }} />
+      <ListItem.Content>
+        <ListItem.Title>{item.title}</ListItem.Title>
+        <ListItem.Subtitle>{item.content}</ListItem.Subtitle>
+      </ListItem.Content>
+      <ListItem.Chevron />
+    </ListItem>
+  );
 
-        </View>
-      )
-    }
+  renderEmptyData = () => {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>No announcements for this date.</Text>
+      </View>
+    );
+  };
+
+  render() {
+    const { annonces } = this.props;
+    const announcements = annonces.reduce((acc, announcement) => {
+      const { title, content, date, teacher } = announcement;
+      const formated_date = moment(date.seconds * 1000).format("YYYY-MM-DD");
+      if (!acc[formated_date]) {
+        acc[formated_date] = [];
+      }
+      acc[formated_date].push({ title, content, teacher });
+      return acc;
+    }, {});
+
     return (
       <View style={styles.container}>
-        <View
-          style={{
-            flex: 1,
-            width: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Text
-            style={{ color: "white", fontSize: 30, fontFamily: "monospace" }}
-          >
-            {currentUser.full_name}
-          </Text>
-        </View>
-        <View style={{ flex: 2 }}>
-          <Calendar
-            onDayPress={(day) => {
-              this.setState({ date: day.dateString });
-              console.log("selected day", day.dateString);
-            }}
-            markedDates={{
-              [this.state.date]: {
-                selected: true,
-                selectedColor: "#00adf5",
-              },
-            }}
-            enableSwipeMonths
-            style={{
-              width: 300,
-              borderRadius: 10,
-            }}
-            theme={{
-              calendarBackground: "#fff",
-              textSectionTitleColor: "grey",
-              todayTextColor: "white",
-              todayBackgroundColor: "#386BF6",
-              dayTextColor: "#000",
-              textDisabledColor: "#d9e1e8",
-              arrowColor: "#000",
-              monthTextColor: "#000",
-              textDayFontFamily: "monospace",
-              textMonthFontFamily: "monospace",
-              textDayHeaderFontFamily: "monospace",
-              textDayFontWeight: "300",
-              textMonthFontWeight: "bold",
-              textDayHeaderFontWeight: "bold",
-              textDayFontSize: 16,
-              textMonthFontSize: 16,
-              textDayHeaderFontSize: 16,
-            }}
+        <View style={{ flex: 1 }}>
+          <Agenda
+            items={announcements}
+            renderItem={this.renderItem}
+            renderEmptyData={this.renderEmptyData}
+            showOnlySelectedDayItems={true}
           />
         </View>
-        <View style={styles.bottom}>
+        {/* <View style={styles.bottom}>
           <TouchableOpacity style={{ alignItems: "center" }}>
             <MaterialCommunityIcons name="timetable" size={50} />
             <Text>Time Table</Text>
@@ -92,7 +65,7 @@ class Home extends Component {
             <MaterialCommunityIcons name="book-check-outline" size={50} />
             <Text>Results</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
     );
   }
@@ -101,8 +74,7 @@ class Home extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    paddingTop: StatusBar.currentHeight,
     backgroundColor: "#386BF6",
   },
   bottom: {
@@ -110,7 +82,6 @@ const styles = StyleSheet.create({
     width: "100%",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    flex: 1,
     marginTop: 20,
     justifyContent: "center",
     alignItems: "center",
@@ -120,7 +91,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (store) => ({
-  currentUser: store.userState.currentUser
+  currentUser: store.userState.currentUser,
+  annonces: store.userState.annonces
 });
 
 export default connect(mapStateToProps, null)(Home);
