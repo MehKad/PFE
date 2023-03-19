@@ -27,6 +27,7 @@ class Annonce extends Component {
       title: "",
       content: "",
       posting: false,
+      start: true,
     };
   }
 
@@ -44,32 +45,17 @@ class Annonce extends Component {
   };
   editAnnonce = (id) => {
     onPress = this.toggleModal();
-    // firebase
-    //   .firestore()
-    //   .collection("annonces")
-    //   .doc(firebase.auth().currentUser.uid)
-    //   .collection("teacherAnnonce")
-    //   .doc(id)
-    //   .delete()
-    //   .then(() => {
-    //     console.log("Delete announcement");
-    //   });
   };
 
   searchFilter = (query) => {
     const { annonces } = this.props;
-    const filteredAnnouncements = annonces.filter(
-      (annonce) =>
-        annonce.title.toLowerCase().includes(query.toLowerCase()) ||
-        annonce.content.toLowerCase().includes(query.toLowerCase()) ||
-        annonce.teacher.full_name.toLowerCase().includes(query.toLowerCase())
+    const filteredAnnouncements = annonces.filter((annonce) =>
+      annonce.title.toLowerCase().includes(query.toLowerCase())
+      || annonce.content.toLowerCase().includes(query.toLowerCase())
+      || annonce.teacher.full_name.toLowerCase().includes(query.toLowerCase())
     );
-    this.setState({
-      filteredAnnouncements: filteredAnnouncements.length
-        ? filteredAnnouncements
-        : [],
-    });
-  };
+    this.setState({ filteredAnnouncements: filteredAnnouncements, start: false });
+  }
 
   toggleModal = () => {
     this.setState((prevState) => ({ modalVisible: !prevState.modalVisible }));
@@ -78,7 +64,6 @@ class Annonce extends Component {
   handleSaveChanges = () => {
     this.setState({ posting: true });
     const { title, content } = this.state;
-    const { currentUser } = this.props;
     firebase
       .firestore()
       .collection("annonces")
@@ -86,8 +71,8 @@ class Annonce extends Component {
       .collection("teacherAnnonce")
       .add({
         title,
-        date: firebase.firestore.FieldValue.serverTimestamp(),
         content,
+        date: new Date()
       })
       .then(() => {
         console.log("Announcement posted");
@@ -102,7 +87,7 @@ class Annonce extends Component {
 
   render() {
     const { currentUser, annonces } = this.props;
-    const { filteredAnnouncements, modalVisible } = this.state;
+    const { filteredAnnouncements, start } = this.state;
     return (
       <SafeAreaProvider style={styles.container}>
         <Searchbar
@@ -110,12 +95,10 @@ class Annonce extends Component {
           onChangeText={(query) => this.searchFilter(query)}
         />
         <FlatList
-          data={
-            !filteredAnnouncements.length ? annonces : filteredAnnouncements
-          }
+          data={start ? annonces : filteredAnnouncements}
           style={{ marginTop: 10 }}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity onPress={() => { }}>
               <AnnouncementCard
                 id={item.id}
                 title={item.title}
@@ -136,7 +119,7 @@ class Annonce extends Component {
           )}
         />
         {!currentUser.student ? (
-          <AnimatedFAB  
+          <AnimatedFAB
             icon={"plus"}
             label={"Add"}
             onPress={this.toggleModal}
