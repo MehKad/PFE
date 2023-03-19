@@ -15,13 +15,6 @@ class Profile extends Component {
 
   render() {
     const { currentUser } = this.props;
-    if (!currentUser) {
-      return (
-        <View style={styles.container}>
-          <ActivityIndicator size="large" color="white" />
-        </View>
-      );
-    }
     return (
       <View style={styles.container}>
         <View style={styles.header}>
