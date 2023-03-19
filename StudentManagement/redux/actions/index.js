@@ -82,7 +82,6 @@ export function fetchUserAnnonces(uid) {
       .collection("annonces")
       .doc(uid)
       .collection("teacherAnnonce")
-      // .orderBy('date', 'desc')
       .onSnapshot((snapshot) => {
         let previous = getState().userState.annonces;
         let annonces = snapshot.docs.map((doc) => {
@@ -99,7 +98,7 @@ export function fetchUserAnnonces(uid) {
         });
         previous = previous.filter((item) => item.uid !== uid);
         annonces = annonces.concat(previous);
-        // annonces.sort((a, b) => new Date(b.date.seconds * 1000) - new Date(a.date.seconds * 1000));
+        annonces.sort((a, b) => new Date(b.date.seconds * 1000) - new Date(a.date.seconds * 1000));
         dispatch({ type: USER_ANNONCE_STATE_CHANGE, annonces });
       });
   };
