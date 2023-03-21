@@ -1,15 +1,103 @@
 import React, { Component } from "react";
-import { StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Modal,
+} from "react-native";
 import { Agenda } from "react-native-calendars";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { ListItem, Avatar } from 'react-native-elements';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { ListItem, Avatar } from "react-native-elements";
 import { connect } from "react-redux";
-import moment from 'moment';
+import moment from "moment";
+import { AntDesign } from "@expo/vector-icons";
 
 class Home extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      timeTableVisible: false,
+      examsVisible: false,
+      resultsVisible: false,
+    };
   }
+
+  handleTimeTableClick = () => {
+    this.setState({ timeTableVisible: true });
+  };
+
+  handleExamsClick = () => {
+    this.setState({ examsVisible: true });
+  };
+
+  handleResultsClick = () => {
+    this.setState({ resultsVisible: true });
+  };
+
+  renderModals = () => {
+    const { timeTableVisible, examsVisible, resultsVisible } = this.state;
+
+    return (
+      <View>
+        {timeTableVisible && (
+          <Modal animationType="slide" visible={this.state.timeTableVisible}>
+            <View>
+              <AntDesign
+                name="close"
+                size={24}
+                onPress={() => this.setState({ timeTableVisible: false })}
+                style={{
+                  backgroundColor: "red",
+                  width: 25,
+                  left: 25,
+                  top: 25,
+                  marginBottom: 25,
+                }}
+              />
+            </View>
+          </Modal>
+        )}
+        {examsVisible && (
+          <Modal>
+            <View>
+              <AntDesign
+                name="close"
+                size={24}
+                onPress={() => this.setState({ examsVisible: false })}
+                style={{
+                  backgroundColor: "red",
+                  width: 25,
+                  left: 25,
+                  top: 25,
+                  marginBottom: 25,
+                }}
+              />
+            </View>
+          </Modal>
+        )}
+        {resultsVisible && (
+          <Modal>
+            <View>
+              <AntDesign
+                name="close"
+                size={24}
+                onPress={() => this.setState({ resultsVisible: false })}
+                style={{
+                  backgroundColor: "red",
+                  width: 25,
+                  left: 25,
+                  top: 25,
+                  marginBottom: 25,
+                }}
+              />
+            </View>
+          </Modal>
+        )}
+      </View>
+    );
+  };
 
   renderItem = (item) => (
     <ListItem>
@@ -24,7 +112,7 @@ class Home extends Component {
 
   renderEmptyData = () => {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>No announcements for this date.</Text>
       </View>
     );
@@ -44,7 +132,7 @@ class Home extends Component {
 
     return (
       <View style={styles.container}>
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 3 }}>
           <Agenda
             items={announcements}
             renderItem={this.renderItem}
@@ -52,20 +140,30 @@ class Home extends Component {
             showOnlySelectedDayItems={true}
           />
         </View>
-        {/* <View style={styles.bottom}>
-          <TouchableOpacity style={{ alignItems: "center" }}>
+        <View style={styles.bottom}>
+          <TouchableOpacity
+            style={{ alignItems: "center" }}
+            onPress={this.handleTimeTableClick}
+          >
             <MaterialCommunityIcons name="timetable" size={50} />
             <Text>Time Table</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ alignItems: "center" }}>
+          <TouchableOpacity
+            style={{ alignItems: "center" }}
+            onPress={this.handleExamsClick}
+          >
             <MaterialCommunityIcons name="book-open-outline" size={50} />
             <Text>Exams</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ alignItems: "center" }}>
+          <TouchableOpacity
+            style={{ alignItems: "center" }}
+            onPress={this.handleResultsClick}
+          >
             <MaterialCommunityIcons name="book-check-outline" size={50} />
             <Text>Results</Text>
           </TouchableOpacity>
-        </View> */}
+        </View>
+        {this.renderModals()}
       </View>
     );
   }
@@ -78,6 +176,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#386BF6",
   },
   bottom: {
+    flex: 1,
     backgroundColor: "white",
     width: "100%",
     borderTopLeftRadius: 30,
@@ -88,11 +187,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     flexDirection: "row",
   },
+  tableC: {
+    padding: 15,
+  },
+  tableHeader: {
+    backgroundColor: "#DCDCDC",
+  },
 });
 
 const mapStateToProps = (store) => ({
   currentUser: store.userState.currentUser,
-  annonces: store.userState.annonces
+  annonces: store.userState.annonces,
 });
 
 export default connect(mapStateToProps, null)(Home);
