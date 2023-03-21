@@ -13,6 +13,7 @@ import { ListItem, Avatar } from "react-native-elements";
 import { connect } from "react-redux";
 import moment from "moment";
 import { AntDesign } from "@expo/vector-icons";
+import { DataTable } from "react-native-paper";
 
 class Home extends Component {
   constructor(props) {
@@ -56,6 +57,70 @@ class Home extends Component {
                   marginBottom: 25,
                 }}
               />
+              <DataTable style={styles.tableC}>
+                <DataTable.Header style={styles.tableHeader}>
+                  <DataTable.Title>Days</DataTable.Title>
+                  <DataTable.Title>8--10</DataTable.Title>
+                  <DataTable.Title>10--12</DataTable.Title>
+                  <DataTable.Title>14--16</DataTable.Title>
+                  <DataTable.Title>16--18</DataTable.Title>
+                </DataTable.Header>
+                <DataTable.Row>
+                  <DataTable.Cell>Mon</DataTable.Cell>
+                  <DataTable.Cell>G.E</DataTable.Cell>
+                  <DataTable.Cell>G.E</DataTable.Cell>
+                  <DataTable.Cell>R</DataTable.Cell>
+                  <DataTable.Cell>R</DataTable.Cell>
+                </DataTable.Row>
+
+                <DataTable.Row>
+                  <DataTable.Cell>Tue</DataTable.Cell>
+                  <DataTable.Cell>G.E</DataTable.Cell>
+                  <DataTable.Cell>G.E</DataTable.Cell>
+                  <DataTable.Cell>R</DataTable.Cell>
+                  <DataTable.Cell>R</DataTable.Cell>
+                </DataTable.Row>
+                <DataTable.Row>
+                  <DataTable.Cell>Wed</DataTable.Cell>
+                  <DataTable.Cell>G.P</DataTable.Cell>
+                  <DataTable.Cell>G.P</DataTable.Cell>
+                  <DataTable.Cell>R</DataTable.Cell>
+                  <DataTable.Cell>R</DataTable.Cell>
+                </DataTable.Row>
+                <DataTable.Row>
+                  <DataTable.Cell>Thu</DataTable.Cell>
+                  <DataTable.Cell>R</DataTable.Cell>
+                  <DataTable.Cell>R</DataTable.Cell>
+                  <DataTable.Cell></DataTable.Cell>
+                  <DataTable.Cell></DataTable.Cell>
+                </DataTable.Row>
+                <DataTable.Row>
+                  <DataTable.Cell>Fri</DataTable.Cell>
+                  <DataTable.Cell></DataTable.Cell>
+                  <DataTable.Cell></DataTable.Cell>
+                  <DataTable.Cell></DataTable.Cell>
+                  <DataTable.Cell></DataTable.Cell>
+                </DataTable.Row>
+              </DataTable>
+
+              <DataTable style={styles.tableC}>
+                <DataTable.Header>
+                  <DataTable.Title>Abreviation</DataTable.Title>
+                  <DataTable.Title>Full name</DataTable.Title>
+                </DataTable.Header>
+                <DataTable.Row>
+                  <DataTable.Cell>R</DataTable.Cell>
+                  <DataTable.Cell>Reseau</DataTable.Cell>
+                </DataTable.Row>
+                <DataTable.Row>
+                  <DataTable.Cell>G.E</DataTable.Cell>
+                  <DataTable.Cell>Gestion d'entreprise</DataTable.Cell>
+                </DataTable.Row>
+                <DataTable.Row>
+                  <DataTable.Cell>G.P</DataTable.Cell>
+                  <DataTable.Cell>Gestion de projet</DataTable.Cell>
+                </DataTable.Row>
+              </DataTable>
             </View>
           </Modal>
         )}
