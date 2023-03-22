@@ -50,7 +50,6 @@ class Home extends Component {
                 size={24}
                 onPress={() => this.setState({ timeTableVisible: false })}
                 style={{
-                  backgroundColor: "red",
                   width: 25,
                   left: 25,
                   top: 25,
@@ -132,7 +131,6 @@ class Home extends Component {
                 size={24}
                 onPress={() => this.setState({ examsVisible: false })}
                 style={{
-                  backgroundColor: "red",
                   width: 25,
                   left: 25,
                   top: 25,
@@ -150,7 +148,6 @@ class Home extends Component {
                 size={24}
                 onPress={() => this.setState({ resultsVisible: false })}
                 style={{
-                  backgroundColor: "red",
                   width: 25,
                   left: 25,
                   top: 25,
@@ -238,14 +235,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: StatusBar.currentHeight,
-    backgroundColor: "#386BF6",
   },
   bottom: {
     flex: 1,
-    backgroundColor: "white",
     width: "100%",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
     marginTop: 20,
     justifyContent: "center",
     alignItems: "center",
