@@ -20,7 +20,7 @@ class Home extends Component {
     super(props);
     this.state = {
       timeTableVisible: false,
-      examsVisible: true,
+      examsVisible: false,
       resultsVisible: false,
     };
   }
@@ -179,18 +179,28 @@ class Home extends Component {
         )}
         {resultsVisible && (
           <Modal>
-            <View>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <AntDesign
                 name="close"
                 size={24}
                 onPress={() => this.setState({ resultsVisible: false })}
                 style={{
+                  position: "absolute",
                   width: 25,
                   left: 25,
                   top: 25,
                   marginBottom: 25,
                 }}
               />
+              <Text style={{ textAlign: "center" }}>
+                There is no Results available right now
+              </Text>
             </View>
           </Modal>
         )}
