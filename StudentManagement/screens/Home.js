@@ -20,7 +20,7 @@ class Home extends Component {
     super(props);
     this.state = {
       timeTableVisible: false,
-      examsVisible: false,
+      examsVisible: true,
       resultsVisible: false,
     };
   }
@@ -137,6 +137,43 @@ class Home extends Component {
                   marginBottom: 25,
                 }}
               />
+              <DataTable style={styles.tableC}>
+                <DataTable.Header style={styles.tableHeader}>
+                  <DataTable.Title>Days</DataTable.Title>
+                  <DataTable.Title>Module</DataTable.Title>
+                  <DataTable.Title>Place</DataTable.Title>
+                  <DataTable.Title>Time</DataTable.Title>
+                </DataTable.Header>
+                <DataTable.Row>
+                  <DataTable.Cell>24-Mar</DataTable.Cell>
+                  <DataTable.Cell>M13</DataTable.Cell>
+                  <DataTable.Cell>TP6/TP9</DataTable.Cell>
+                  <DataTable.Cell>9--12</DataTable.Cell>
+                </DataTable.Row>
+                <DataTable.Row>
+                  <DataTable.Cell>24-Mar</DataTable.Cell>
+                  <DataTable.Cell>M14</DataTable.Cell>
+                  <DataTable.Cell>TP6/TP9</DataTable.Cell>
+                  <DataTable.Cell>9--12</DataTable.Cell>
+                </DataTable.Row>
+              </DataTable>
+
+              <DataTable style={styles.tableC}>
+                <DataTable.Header>
+                  <DataTable.Title>Abreviation</DataTable.Title>
+                  <DataTable.Title>Full name</DataTable.Title>
+                </DataTable.Header>
+                <DataTable.Row>
+                  <DataTable.Cell>M13</DataTable.Cell>
+                  <DataTable.Cell>Reseau</DataTable.Cell>
+                </DataTable.Row>
+                <DataTable.Row>
+                  <DataTable.Cell>M14</DataTable.Cell>
+                  <DataTable.Cell>
+                    Organisation des Entreprises et Gestion de Projet
+                  </DataTable.Cell>
+                </DataTable.Row>
+              </DataTable>
             </View>
           </Modal>
         )}
