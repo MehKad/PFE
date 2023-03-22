@@ -2,25 +2,27 @@ import React, { useState, useRef } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 
-const AnnouncementCard = ({ id, title, content, date, avatar, teacherName, teacher, deleteAnnonce, editAnnonce }) => {
-    const [expanded, setExpanded] = useState(false);
-    const animation = useRef(new Animated.Value(0)).current;
+import FadeIn from './FadeIn';
 
-    const toggleCard = () => {
-        if (expanded) {
-            Animated.timing(animation, {
-                toValue: 0,
-                duration: 300,
-                useNativeDriver: false,
-            }).start(() => setExpanded(false));
-        } else {
-            Animated.timing(animation, {
-                toValue: 1,
-                duration: 300,
-                useNativeDriver: false,
-            }).start(() => setExpanded(true));
-        }
-    };
+const AnnouncementCard = ({ id, title, content, date, avatar, teacherName, teacher, deleteAnnonce, editAnnouncemnt }) => {
+  const [expanded, setExpanded] = useState(false);
+  const animation = useRef(new Animated.Value(0)).current;
+
+  const toggleCard = () => {
+    if (expanded) {
+      Animated.timing(animation, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: false,
+      }).start(() => setExpanded(false));
+    } else {
+      Animated.timing(animation, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: false,
+      }).start(() => setExpanded(true));
+    }
+  };
 
   const heightInterpolate = animation.interpolate({
     inputRange: [0, 1],
@@ -35,7 +37,7 @@ const AnnouncementCard = ({ id, title, content, date, avatar, teacherName, teach
   const EditButton = () => {
     return (
       <TouchableOpacity
-        onPress={() => editAnnonce(id)}
+        onPress={() => editAnnouncemnt({ id, title, content })}
         style={styles.editButton}
       >
         <MaterialIcons name="edit" size={20} color="#1c1c1c" />
@@ -45,32 +47,34 @@ const AnnouncementCard = ({ id, title, content, date, avatar, teacherName, teach
 
   const DeleteButton = () => {
     return (
-            <TouchableOpacity onPress={() => deleteAnnonce(id)} style={styles.deleteButton}>
-                <MaterialCommunityIcons name="delete-outline" size={20} color="#1c1c1c" />
-            </TouchableOpacity>
-        );
+      <TouchableOpacity onPress={() => deleteAnnonce(id)} style={styles.deleteButton}>
+        <MaterialCommunityIcons name="delete-outline" size={20} color="#1c1c1c" />
+      </TouchableOpacity>
+    );
   };
 
   return (
-    <TouchableOpacity onPress={toggleCard} activeOpacity={0.8}>
-      <Animated.View style={[styles.container, { height: heightInterpolate }]}>
-        <View style={styles.header}>
-          <Image style={styles.avatar} source={{ uri: avatar }} />
-          <View style={styles.headerText}>
-            <Text style={styles.title}>{title}</Text>
-            <Text style={styles.date}>{date}</Text>
+    <FadeIn>
+      <TouchableOpacity onPress={toggleCard} activeOpacity={0.8}>
+        <Animated.View style={[styles.container, { height: heightInterpolate }]}>
+          <View style={styles.header}>
+            <Image style={styles.avatar} source={{ uri: avatar }} />
+            <View style={styles.headerText}>
+              <Text style={styles.title}>{title}</Text>
+              <Text style={styles.date}>{date}</Text>
+            </View>
+            {teacher && <EditButton />}
+            {teacher && <DeleteButton />}
           </View>
-          {teacher ? <EditButton /> : null}
-          {teacher ? <DeleteButton /> : null}
-        </View>
-        <Animated.View style={{ opacity: opacityInterpolate }}>
-          <View style={styles.body}>
-            <Text style={styles.content}>{content}</Text>
-            <Text style={styles.teacherName}>{teacherName}</Text>
-          </View>
+          <Animated.View style={{ opacity: opacityInterpolate }}>
+            <View style={styles.body}>
+              <Text style={styles.content}>{content}</Text>
+              <Text style={styles.teacherName}>{teacherName}</Text>
+            </View>
+          </Animated.View>
         </Animated.View>
-      </Animated.View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </FadeIn>
   );
 };
 
@@ -82,19 +86,19 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderWidth: 1,
     borderColor: "#dadce0",
-    elevation: 0, // remove the shadow
+    elevation: 0,
     overflow: "hidden",
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 12, // increase the margin
+    marginBottom: 12,
   },
   avatar: {
-    width: 40, // decrease the size
+    width: 40,
     height: 40,
     borderRadius: 20,
-    marginRight: 12, // decrease the margin
+    marginRight: 12,
   },
   headerText: {
     flex: 1,
@@ -107,7 +111,7 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 12,
-    color: "#5f6368", // change the color
+    color: "#5f6368",
   },
   body: {
     paddingTop: 12,
@@ -118,12 +122,12 @@ const styles = StyleSheet.create({
   teacherName: {
     fontSize: 10,
     fontWeight: "bold",
-    color: "black", // change the color
+    color: "black",
     marginTop: 8,
   },
   content: {
     fontSize: 16,
-    color: "#202124", // change the color
+    color: "#202124",
   },
   editButton: {
     backgroundColor: "#e0e0e0",
