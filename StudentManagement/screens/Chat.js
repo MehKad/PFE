@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { GiftedChat } from "react-native-gifted-chat";
+import { Bubble, GiftedChat } from "react-native-gifted-chat";
 import firebase from "firebase/compat";
 import { StatusBar, View } from "react-native";
 
@@ -103,6 +103,30 @@ class Chat extends Component {
       .add(newMessage);
   }
 
+  renderBubble = (props) => {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          right: {
+            backgroundColor: "#0084FF",
+          },
+          left: {
+            backgroundColor: "#1D9DC3",
+          },
+        }}
+        textStyle={{
+          right: {
+            color: "white",
+          },
+          left: {
+            color: "white",
+          },
+        }}
+      />
+    );
+  };
+
   render() {
     const { messages, users, currentUser } = this.state;
     return (
@@ -116,11 +140,13 @@ class Chat extends Component {
         <GiftedChat
           messages={messages}
           onSend={(messages) => this.onSend(messages)}
+          showUserAvatar
           user={{
             _id: currentUser,
             name: users[currentUser]?.full_name,
             avatar: users[currentUser]?.image,
           }}
+          renderBubble={this.renderBubble}
         />
       </View>
     );
