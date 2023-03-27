@@ -20,6 +20,7 @@
     "react-native": "0.70.5",
     "react-native-calendars": "^1.1293.0",
     "react-native-elements": "^3.4.3",
+    "react-native-gifted-chat": "^2.0.1",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-paper": "^5.2.0",
     "react-native-reanimated": "~2.12.0",
