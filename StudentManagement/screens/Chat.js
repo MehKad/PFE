@@ -2,12 +2,14 @@ import React, { Component } from "react";
 import { Bubble, GiftedChat } from "react-native-gifted-chat";
 import firebase from "firebase/compat";
 import { StatusBar, View } from "react-native";
+import UserProfile from "../components/UserProfile";
 
 class Chat extends Component {
   state = {
     messages: [],
     users: {},
     currentUser: firebase.auth().currentUser.uid,
+    selectedUser: null,
   };
 
   unsubscribe = null;
@@ -31,6 +33,7 @@ class Chat extends Component {
             user: {
               _id: data.user._id,
               name: data.user.name,
+              email: data.user.email,
               avatar: data.user.avatar,
             },
           };
@@ -90,6 +93,7 @@ class Chat extends Component {
       user: {
         _id: currentUser,
         name: users[currentUser]?.full_name,
+        email: users[currentUser]?.email,
         avatar: users[currentUser]?.image,
       },
       userId: currentUser,
@@ -123,12 +127,13 @@ class Chat extends Component {
             color: "white",
           },
         }}
+        onLongPress={() => this.onPressAvatar(props?.currentMessage?.user)}
       />
     );
   };
 
   render() {
-    const { messages, users, currentUser } = this.state;
+    const { messages, users, currentUser, selectedUser } = this.state;
     return (
       <View
         style={{
@@ -144,10 +149,19 @@ class Chat extends Component {
           user={{
             _id: currentUser,
             name: users[currentUser]?.full_name,
+            email: users[currentUser]?.email,
             avatar: users[currentUser]?.image,
           }}
           renderBubble={this.renderBubble}
+          onPressAvatar={(user) => this.setState({ selectedUser: user })}
         />
+        {selectedUser && (
+          <UserProfile
+            user={selectedUser}
+            visible={selectedUser != null}
+            onClose={() => this.setState({ selectedUser: null })}
+          />
+        )}
       </View>
     );
   }
