@@ -59,13 +59,13 @@ class AppStack extends Component {
                 case "Annonce":
                   iconName = focused ? "megaphone" : "megaphone-outline";
                   break;
+                case "Chat":
+                  iconName = focused ? "chatbubbles" : "chatbubbles-outline";
+                  break;
                 case "Profile":
                   iconName = focused
                     ? "person-circle"
                     : "person-circle-outline";
-                  break;
-                case "Chat":
-                  iconName = focused ? "chatbox" : "chatbox-outline";
                   break;
               }
               return <Ionicons name={iconName} size={24} color={color} />;
@@ -78,7 +78,7 @@ class AppStack extends Component {
             component={Annonce}
             options={{ tabBarBadge: true }}
           />
-          <Tab.Screen name="Chat" component={Chat} />
+          {currentUser.student && <Tab.Screen name="Chat" component={Chat} />}
           <Tab.Screen name="Profile" component={Profile} />
         </Tab.Navigator>
       );
