@@ -3,6 +3,7 @@ import { Bubble, GiftedChat } from "react-native-gifted-chat";
 import firebase from "firebase/compat";
 import { StatusBar, View } from "react-native";
 import UserProfile from "../components/UserProfile";
+import { connect } from "react-redux";
 
 class Chat extends Component {
   state = {
@@ -15,10 +16,11 @@ class Chat extends Component {
   unsubscribe = null;
 
   componentDidMount() {
+    const { cUser } = this.props;
     this.unsubscribe = firebase
       .firestore()
       .collection("chatrooms")
-      .doc("GI")
+      .doc(cUser.filiere)
       .collection("messages")
       .orderBy("createdAt", "desc")
       .onSnapshot((querySnapshot) => {
@@ -58,10 +60,11 @@ class Chat extends Component {
   }
 
   async loadUsers() {
+    const { cUser } = this.props;
     const roomDoc = await firebase
       .firestore()
       .collection("chatrooms")
-      .doc("GI")
+      .doc(cUser.filiere)
       .collection("members")
       .get();
 
@@ -85,6 +88,7 @@ class Chat extends Component {
   }
 
   async onSend(messages = []) {
+    const { cUser } = this.props;
     const { users, currentUser } = this.state;
     const message = messages[0];
     const newMessage = {
@@ -102,7 +106,7 @@ class Chat extends Component {
     await firebase
       .firestore()
       .collection("chatrooms")
-      .doc("GI")
+      .doc(cUser.filiere)
       .collection("messages")
       .add(newMessage);
   }
@@ -167,4 +171,8 @@ class Chat extends Component {
   }
 }
 
-export default Chat;
+const mapStateToProps = (store) => ({
+  cUser: store.userState.currentUser,
+});
+
+export default connect(mapStateToProps, null)(Chat);
