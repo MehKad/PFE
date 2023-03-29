@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   Modal,
+  Linking,
 } from "react-native";
 import { Agenda } from "react-native-calendars";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -13,7 +14,8 @@ import { ListItem, Avatar } from "react-native-elements";
 import { connect } from "react-redux";
 import moment from "moment";
 import { AntDesign } from "@expo/vector-icons";
-import { DataTable } from "react-native-paper";
+import { Button } from "react-native-paper";
+import firebase from "firebase/compat";
 
 class Home extends Component {
   constructor(props) {
@@ -23,6 +25,27 @@ class Home extends Component {
       examsVisible: false,
       resultsVisible: false,
     };
+  }
+
+  async getTimeTable() {
+    const { currentUser } = this.props;
+    const Link = await firebase
+      .firestore()
+      .collection("filiere")
+      .doc(currentUser.filiere)
+      .collection("timetable")
+      .get();
+    Linking.openURL(Link.docs[0].data().link);
+  }
+  async getExams() {
+    const { currentUser } = this.props;
+    const Link = await firebase
+      .firestore()
+      .collection("filiere")
+      .doc(currentUser.filiere)
+      .collection("exams")
+      .get();
+    Linking.openURL(Link.docs[0].data().link);
   }
 
   handleTimeTableClick = () => {
@@ -43,164 +66,95 @@ class Home extends Component {
     return (
       <View>
         {timeTableVisible && (
-          <Modal animationType="slide" visible={this.state.timeTableVisible}>
-            <View>
-              <AntDesign
-                name="close"
-                size={24}
-                onPress={() => this.setState({ timeTableVisible: false })}
-                style={{
-                  width: 25,
-                  left: 25,
-                  top: 25,
-                  marginBottom: 25,
-                }}
-              />
-              <DataTable style={styles.tableC}>
-                <DataTable.Header style={styles.tableHeader}>
-                  <DataTable.Title>Days</DataTable.Title>
-                  <DataTable.Title>8--10</DataTable.Title>
-                  <DataTable.Title>10--12</DataTable.Title>
-                  <DataTable.Title>14--16</DataTable.Title>
-                  <DataTable.Title>16--18</DataTable.Title>
-                </DataTable.Header>
-                <DataTable.Row>
-                  <DataTable.Cell>Mon</DataTable.Cell>
-                  <DataTable.Cell>G.E</DataTable.Cell>
-                  <DataTable.Cell>G.E</DataTable.Cell>
-                  <DataTable.Cell>R</DataTable.Cell>
-                  <DataTable.Cell>R</DataTable.Cell>
-                </DataTable.Row>
-
-                <DataTable.Row>
-                  <DataTable.Cell>Tue</DataTable.Cell>
-                  <DataTable.Cell>G.E</DataTable.Cell>
-                  <DataTable.Cell>G.E</DataTable.Cell>
-                  <DataTable.Cell>R</DataTable.Cell>
-                  <DataTable.Cell>R</DataTable.Cell>
-                </DataTable.Row>
-                <DataTable.Row>
-                  <DataTable.Cell>Wed</DataTable.Cell>
-                  <DataTable.Cell>G.P</DataTable.Cell>
-                  <DataTable.Cell>G.P</DataTable.Cell>
-                  <DataTable.Cell>R</DataTable.Cell>
-                  <DataTable.Cell>R</DataTable.Cell>
-                </DataTable.Row>
-                <DataTable.Row>
-                  <DataTable.Cell>Thu</DataTable.Cell>
-                  <DataTable.Cell>R</DataTable.Cell>
-                  <DataTable.Cell>R</DataTable.Cell>
-                  <DataTable.Cell></DataTable.Cell>
-                  <DataTable.Cell></DataTable.Cell>
-                </DataTable.Row>
-                <DataTable.Row>
-                  <DataTable.Cell>Fri</DataTable.Cell>
-                  <DataTable.Cell></DataTable.Cell>
-                  <DataTable.Cell></DataTable.Cell>
-                  <DataTable.Cell></DataTable.Cell>
-                  <DataTable.Cell></DataTable.Cell>
-                </DataTable.Row>
-              </DataTable>
-
-              <DataTable style={styles.tableC}>
-                <DataTable.Header>
-                  <DataTable.Title>Abreviation</DataTable.Title>
-                  <DataTable.Title>Full name</DataTable.Title>
-                </DataTable.Header>
-                <DataTable.Row>
-                  <DataTable.Cell>R</DataTable.Cell>
-                  <DataTable.Cell>Reseau</DataTable.Cell>
-                </DataTable.Row>
-                <DataTable.Row>
-                  <DataTable.Cell>G.E</DataTable.Cell>
-                  <DataTable.Cell>Gestion d'entreprise</DataTable.Cell>
-                </DataTable.Row>
-                <DataTable.Row>
-                  <DataTable.Cell>G.P</DataTable.Cell>
-                  <DataTable.Cell>Gestion de projet</DataTable.Cell>
-                </DataTable.Row>
-              </DataTable>
+          <Modal
+            animationType="slide"
+            visible={this.state.timeTableVisible}
+            transparent
+          >
+            <View style={styles.Mcontainer}>
+              <View style={styles.content}>
+                <AntDesign
+                  name="close"
+                  size={24}
+                  onPress={() => this.setState({ timeTableVisible: false })}
+                  style={{
+                    position: "absolute",
+                    width: 25,
+                    left: 25,
+                    top: 25,
+                    marginBottom: 25,
+                  }}
+                />
+                <Text>You are about to open the time table, procede ?</Text>
+                <Button
+                  icon="timetable"
+                  mode="contained"
+                  style={{ marginTop: 50 }}
+                  onPress={() => this.getTimeTable()}
+                >
+                  Yes
+                </Button>
+              </View>
             </View>
           </Modal>
         )}
         {examsVisible && (
-          <Modal>
-            <View>
-              <AntDesign
-                name="close"
-                size={24}
-                onPress={() => this.setState({ examsVisible: false })}
-                style={{
-                  width: 25,
-                  left: 25,
-                  top: 25,
-                  marginBottom: 25,
-                }}
-              />
-              <DataTable style={styles.tableC}>
-                <DataTable.Header style={styles.tableHeader}>
-                  <DataTable.Title>Days</DataTable.Title>
-                  <DataTable.Title>Module</DataTable.Title>
-                  <DataTable.Title>Place</DataTable.Title>
-                  <DataTable.Title>Time</DataTable.Title>
-                </DataTable.Header>
-                <DataTable.Row>
-                  <DataTable.Cell>24-Mar</DataTable.Cell>
-                  <DataTable.Cell>M13</DataTable.Cell>
-                  <DataTable.Cell>TP6/TP9</DataTable.Cell>
-                  <DataTable.Cell>9--12</DataTable.Cell>
-                </DataTable.Row>
-                <DataTable.Row>
-                  <DataTable.Cell>24-Mar</DataTable.Cell>
-                  <DataTable.Cell>M14</DataTable.Cell>
-                  <DataTable.Cell>TP6/TP9</DataTable.Cell>
-                  <DataTable.Cell>9--12</DataTable.Cell>
-                </DataTable.Row>
-              </DataTable>
-
-              <DataTable style={styles.tableC}>
-                <DataTable.Header>
-                  <DataTable.Title>Abreviation</DataTable.Title>
-                  <DataTable.Title>Full name</DataTable.Title>
-                </DataTable.Header>
-                <DataTable.Row>
-                  <DataTable.Cell>M13</DataTable.Cell>
-                  <DataTable.Cell>Reseau</DataTable.Cell>
-                </DataTable.Row>
-                <DataTable.Row>
-                  <DataTable.Cell>M14</DataTable.Cell>
-                  <DataTable.Cell>
-                    Organisation des Entreprises et Gestion de Projet
-                  </DataTable.Cell>
-                </DataTable.Row>
-              </DataTable>
+          <Modal
+            animationType="slide"
+            visible={this.state.examsVisible}
+            transparent
+          >
+            <View style={styles.Mcontainer}>
+              <View style={styles.content}>
+                <AntDesign
+                  name="close"
+                  size={24}
+                  onPress={() => this.setState({ examsVisible: false })}
+                  style={{
+                    position: "absolute",
+                    width: 25,
+                    left: 25,
+                    top: 25,
+                    marginBottom: 25,
+                  }}
+                />
+                <Text>
+                  You are about to open the exams scheduale, procede ?
+                </Text>
+                <Button
+                  icon="timetable"
+                  mode="contained"
+                  onPress={() => this.getExams()}
+                  style={{ marginTop: 50 }}
+                >
+                  Yes
+                </Button>
+              </View>
             </View>
           </Modal>
         )}
         {resultsVisible && (
-          <Modal>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <AntDesign
-                name="close"
-                size={24}
-                onPress={() => this.setState({ resultsVisible: false })}
-                style={{
-                  position: "absolute",
-                  width: 25,
-                  left: 25,
-                  top: 25,
-                  marginBottom: 25,
-                }}
-              />
-              <Text style={{ textAlign: "center" }}>
-                There is no Results available right now
-              </Text>
+          <Modal
+            animationType="slide"
+            visible={this.state.resultsVisible}
+            transparent
+          >
+            <View style={styles.Mcontainer}>
+              <View style={styles.content}>
+                <AntDesign
+                  name="close"
+                  size={24}
+                  onPress={() => this.setState({ resultsVisible: false })}
+                  style={{
+                    position: "absolute",
+                    width: 25,
+                    left: 25,
+                    top: 25,
+                    marginBottom: 25,
+                  }}
+                />
+                <Text>Results aren't available now</Text>
+              </View>
             </View>
           </Modal>
         )}
@@ -292,11 +246,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     flexDirection: "row",
   },
-  tableC: {
-    padding: 15,
+  Mcontainer: {
+    flex: 1,
+    justifyContent: "flex-end",
   },
-  tableHeader: {
-    backgroundColor: "#DCDCDC",
+  content: {
+    backgroundColor: "white",
+    height: "40%",
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
