@@ -62,6 +62,7 @@ class Home extends Component {
 
   renderModals = () => {
     const { timeTableVisible, examsVisible, resultsVisible } = this.state;
+    const { currentUser } = this.props;
 
     return (
       <View>
@@ -85,15 +86,23 @@ class Home extends Component {
                     marginBottom: 25,
                   }}
                 />
-                <Text>You are about to open the time table, procede ?</Text>
-                <Button
-                  icon="timetable"
-                  mode="contained"
-                  style={{ marginTop: 50 }}
-                  onPress={() => this.getTimeTable()}
-                >
-                  Yes
-                </Button>
+                {currentUser.student ? (
+                  <>
+                    <Text>You are about to open the time table, proceed?</Text>
+                    <Button
+                      icon="timetable"
+                      mode="contained"
+                      style={{ marginTop: 50 }}
+                      onPress={() => this.getTimeTable()}
+                    >
+                      Yes
+                    </Button>
+                  </>
+                ) : (
+                  <Text>
+                    You are a teacher, you are unable to see the timetable
+                  </Text>
+                )}
               </View>
             </View>
           </Modal>
@@ -118,17 +127,25 @@ class Home extends Component {
                     marginBottom: 25,
                   }}
                 />
-                <Text>
-                  You are about to open the exams scheduale, procede ?
-                </Text>
-                <Button
-                  icon="timetable"
-                  mode="contained"
-                  onPress={() => this.getExams()}
-                  style={{ marginTop: 50 }}
-                >
-                  Yes
-                </Button>
+                {currentUser.student ? (
+                  <>
+                    <Text>
+                      You are about to open the exams scheduale, proceed?
+                    </Text>
+                    <Button
+                      icon="timetable"
+                      mode="contained"
+                      style={{ marginTop: 50 }}
+                      onPress={() => this.getExams()}
+                    >
+                      Yes
+                    </Button>
+                  </>
+                ) : (
+                  <Text>
+                    You are a teacher, you are unable to see the exams scheduale
+                  </Text>
+                )}
               </View>
             </View>
           </Modal>
