@@ -4,11 +4,12 @@ import firebase from "firebase/compat";
 import { StatusBar, View } from "react-native";
 import UserProfile from "../components/UserProfile";
 import { connect } from "react-redux";
+import "firebase/firestore";
 
 class Chat extends Component {
   state = {
     messages: [],
-    users: {},
+    users: [],
     currentUser: firebase.auth().currentUser.uid,
     selectedUser: null,
   };
@@ -61,30 +62,15 @@ class Chat extends Component {
 
   async loadUsers() {
     const { cUser } = this.props;
-    const roomDoc = await firebase
+    const querySnapshot = await firebase
       .firestore()
-      .collection("chatrooms")
-      .doc(cUser.filiere)
-      .collection("members")
+      .collection("users")
+      .where("filiere", "==", cUser.filiere)
       .get();
 
-    const users = {};
-    const members = roomDoc.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    const userIds = querySnapshot.docs.map((doc) => doc.id);
 
-    for (const member of members) {
-      const userDoc = await firebase
-        .firestore()
-        .collection("users")
-        .doc(member.id)
-        .get();
-
-      users[member.id] = userDoc.data();
-    }
-
-    this.setState({ users });
+    this.setState({ users: userIds });
   }
 
   async onSend(messages = []) {
