@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import firebase from "firebase/compat";
+import { Snackbar } from 'react-native-paper';
 
 export default class Login extends Component {
   constructor(props) {
@@ -17,8 +18,13 @@ export default class Login extends Component {
     this.state = {
       email: "",
       password: "",
+      visible: false,
     };
   }
+
+  onToggleSnackBar = () => this.setState((prevState) => ({ visible: !prevState.visible }));
+
+  onDismissSnackBar = () => this.setState({ visible: false });
 
   onSignIn = () => {
     const { email, password } = this.state;
@@ -29,9 +35,11 @@ export default class Login extends Component {
         console.log(`Sign in: ${email}, ${password}`);
       })
       .catch((error) => alert(error));
+    this.onToggleSnackBar();
   };
 
   render() {
+    const { visible } = this.state;
     return (
       <KeyboardAwareScrollView>
         <View style={styles.parent}>
@@ -78,6 +86,12 @@ export default class Login extends Component {
               <Text style={styles.contact}>Contacter votre prof</Text>
             </TouchableOpacity>
           </View>
+          <Snackbar
+            visible={visible}
+            onDismiss={() => this.onDismissSnackBar()}
+          >
+            Login Successful
+          </Snackbar>
         </View>
       </KeyboardAwareScrollView>
     );

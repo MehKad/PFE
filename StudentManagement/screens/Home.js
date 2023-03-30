@@ -35,6 +35,7 @@ class Home extends Component {
       .doc(currentUser.filiere)
       .collection("timetable")
       .get();
+    this.handleTimeTableClick();
     Linking.openURL(Link.docs[0].data().link);
   }
   async getExams() {
@@ -45,20 +46,15 @@ class Home extends Component {
       .doc(currentUser.filiere)
       .collection("exams")
       .get();
+    this.handleExamsClick();
     Linking.openURL(Link.docs[0].data().link);
   }
 
-  handleTimeTableClick = () => {
-    this.setState({ timeTableVisible: true });
-  };
+  handleTimeTableClick = () => this.setState((prevState) => ({ timeTableVisible: !prevState.timeTableVisible }));
 
-  handleExamsClick = () => {
-    this.setState({ examsVisible: true });
-  };
+  handleExamsClick = () => this.setState((prevState) => ({ examsVisible: !prevState.examsVisible }));
 
-  handleResultsClick = () => {
-    this.setState({ resultsVisible: true });
-  };
+  handleResultsClick = () => this.setState((prevState) => ({ resultsVisible: !prevState.resultsVisible }));
 
   renderModals = () => {
     const { timeTableVisible, examsVisible, resultsVisible } = this.state;

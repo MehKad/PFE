@@ -1,11 +1,25 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import firebase from "firebase/compat";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { connect } from "react-redux";
 import moment from 'moment';
+import { Snackbar } from 'react-native-paper';
 
-class Profile extends Component {
-  onLogOut = () => {
+import UserModel from "../components/UserModel";
+
+const Profile = (props) => {
+  const uid = firebase.auth().currentUser.uid;
+  const { currentUser } = props;
+  const [modelVisible, setModelVisible] = useState(false);
+  const [posting, setPosting] = useState(false);
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+
+  const onToggleSnackBar = () => setSnackbarVisible((prevState) => !prevState);
+
+  const onDismissSnackBar = () => setSnackbarVisible(false);
+
+  const onLogOut = () => {
     firebase
       .auth()
       .signOut()
@@ -13,70 +27,123 @@ class Profile extends Component {
       .catch((error) => alert(error));
   };
 
-  render() {
-    const { currentUser } = this.props;
-    return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text
-            style={{
-              color: "white",
-              fontWeight: "bold",
-              fontSize: 30,
-              marginTop: 30,
-              paddingBottom: 5,
-            }}
-          >
-            Profile
-          </Text>
-          <Image source={{ uri: currentUser.image }} style={styles.img} />
-          <Text
-            style={{
-              color: "white",
-              fontWeight: "bold",
-              fontSize: 20,
-              margin: 5,
-            }}
-          >
-            {currentUser.full_name}
-          </Text>
-          <Text style={{ color: "white" }}>
-            {currentUser.student ? "Student" : "Teacher"}
-          </Text>
-        </View>
+  const toggleModal = () => {
+    setModelVisible((prevState) => !prevState);
+  };
 
-        <View style={styles.body}>
-          <Text style={styles.general}>General</Text>
-          <Text></Text>
-          <Text style={styles.title}>Email</Text>
-          <Text style={styles.data}>{currentUser.email}</Text>
-          <Seperator />
-          <Text style={styles.title}>Phone Number</Text>
-          <Text style={styles.data}>{currentUser.phone}</Text>
-          <Seperator />
-          <Text style={styles.title}>Code</Text>
-          <Text style={styles.data}>{currentUser.id}</Text>
-          <Seperator />
-          <Text style={styles.title}>Date of birth</Text>
-          <Text style={styles.data}>{moment(currentUser.date_birth.seconds * 1000).format('L')}</Text>
-        </View>
+  const uploadImage = async (name, phone, image, dateBirth) => {
+    setPosting(true);
+    const childPath = `users/${uid}/${Math.random().toString(36)}`;
+    const response = await fetch(image);
+    const blob = await response.blob();
+    const storage = getStorage();
+    const storageRef = ref(storage, childPath);
+    uploadBytes(storageRef, blob).then((snapshot) => {
+      console.log('Image uploaded successfully!');
+      getDownloadURL(snapshot.ref).then(url => handleSaveChanges(name, phone, url, dateBirth));
+    });
+  };
 
-        <View>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => this.onLogOut()}
-          >
-            <Text style={styles.buttonText}>Logout</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
+
+  const handleSaveChanges = (name, phone, url, dateBirth) => {
+    firebase
+      .firestore()
+      .collection('users')
+      .doc(uid)
+      .update({
+        full_name: name,
+        phone,
+        image: url,
+        date_birth: dateBirth
+      })
+      .then(() => {
+        setPosting(false);
+        toggleModal();
+        onToggleSnackBar();
+      })
   }
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text
+          style={{
+            color: "white",
+            fontWeight: "bold",
+            fontSize: 30,
+            marginTop: 30,
+            paddingBottom: 5,
+          }}
+        >
+          Profile
+        </Text>
+        <Image source={{ uri: currentUser.image }} style={styles.img} />
+        <Text
+          style={{
+            color: "white",
+            fontWeight: "bold",
+            fontSize: 20,
+            margin: 5,
+          }}
+        >
+          {currentUser.full_name}
+        </Text>
+        <Text style={{ color: "white" }}>
+          {currentUser.student ? "Student" : "Teacher"}
+        </Text>
+      </View>
+
+      <View style={styles.body}>
+        <Text style={styles.general}>General</Text>
+        <Text></Text>
+        <Text style={styles.title}>Email</Text>
+        <Text style={styles.data}>{currentUser.email}</Text>
+        <Seperator />
+        <Text style={styles.title}>Phone Number</Text>
+        <Text style={styles.data}>{currentUser.phone}</Text>
+        <Seperator />
+        <Text style={styles.title}>Code</Text>
+        <Text style={styles.data}>{currentUser.id}</Text>
+        <Seperator />
+        <Text style={styles.title}>Date of birth</Text>
+        <Text style={styles.data}>{moment(currentUser.date_birth.seconds * 1000).format('DD/MM/YYYY')}</Text>
+      </View>
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.editButton} onPress={() => toggleModal()}>
+          <Text style={styles.editButtonText}>Edit Profile</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.logoutButton}
+          onPress={() => onLogOut()}
+        >
+          <Text style={styles.buttonText}>Logout</Text>
+        </TouchableOpacity>
+      </View>
+      <UserModel
+        visible={modelVisible}
+        posting={posting}
+        prevName={currentUser.full_name}
+        prevPhone={currentUser.phone}
+        prevImage={currentUser.image}
+        prevDate={currentUser.date_birth}
+        toggleModal={toggleModal}
+        handleSaveChanges={handleSaveChanges}
+        uploadImage={uploadImage}
+      />
+      <Snackbar
+        visible={snackbarVisible}
+        onDismiss={() => onDismissSnackBar()}
+      >
+        Updated Successfully
+      </Snackbar>
+    </View>
+  );
 }
 
 const Seperator = () => <View style={styles.sep} />;
 
-// style
+
 
 const styles = StyleSheet.create({
   container: {
@@ -84,20 +151,33 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  button: {
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "90%",
+    paddingVertical: 20,
+  },
+  editButton: {
     backgroundColor: "#386BF6",
     borderRadius: 15,
-    borderWidth: 1,
-    borderColor: "#fff",
-    paddingBottom: 15,
-    paddingTop: 15,
-    paddingLeft: 120,
-    paddingRight: 120,
-    marginTop: 20,
-    marginBottom: 15,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
   },
-  buttonText: {
-    color: "#fff",
+  editButtonText: {
+    color: "#FFFFFF",
+    fontWeight: "bold",
+  },
+  logoutButton: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: "#386BF6",
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+  },
+  logoutButtonText: {
+    color: "#386BF6",
     fontWeight: "bold",
   },
   header: {
