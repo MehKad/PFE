@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import firebase from "firebase/compat";
-import { Snackbar } from 'react-native-paper';
+import { Snackbar } from "react-native-paper";
 
 export default class Login extends Component {
   constructor(props) {
@@ -22,7 +22,8 @@ export default class Login extends Component {
     };
   }
 
-  onToggleSnackBar = () => this.setState((prevState) => ({ visible: !prevState.visible }));
+  onToggleSnackBar = () =>
+    this.setState((prevState) => ({ visible: !prevState.visible }));
 
   onDismissSnackBar = () => this.setState({ visible: false });
 
@@ -79,7 +80,7 @@ export default class Login extends Component {
             <TouchableOpacity
               onPress={() =>
                 Linking.openURL(
-                  "mailto:mehkadiri@gmail.com?subject=Forgotten password&body=I have forgotten my password, can you reset it?"
+                  "mailto:benkiranedut@gmail.com?subject=Forgotten password&body=I have forgotten my password, can you reset it?"
                 )
               }
             >

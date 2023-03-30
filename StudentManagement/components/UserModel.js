@@ -66,7 +66,7 @@ const UserModel = ({
     }
 
     return (
-        <Modal visible={visible} animationType='slide'>
+        <Modal visible={visible} animationType='slide' transparent>
             <View style={styles.container}>
                 <AntDesign
                     name='close'
