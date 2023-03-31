@@ -21,37 +21,37 @@ We make this projects for teachers as well, where they can write, edit, and remo
 
 ## login
 
-![Home-Page](Images/Login.jpg)
+<img src="Images/Login.jpg" alt="Login" width="250"/>
 
 ## Home page
 
 <li>Students : </li>
 
-![Home-Students](Images/homeS.jpg)
+<img src="Images/homeS.jpg" alt="Home-Students" width="250"/>
 
 <li>Teacher : </li>
 
-![Home-Teacher](Images/HomeT.jpg)
+<img src="Images/HomeT.jpg" alt="Home-Teacher" width="250"/>
 
 ## Annonces / Posts
 
 <li>Students : </li>
 
-![Posts-Student](Images/PostsS.jpg)
+<img src="Images/PostsS.jpg" alt="Posts-Student" width="250"/>
 
 <li>Teacher : </li>
 
-![Posts-teacher](Images/PostsT.jpg)
-![Posts-edit](Images/PostsTE.jpg)
+<img src="Images/PostsT.jpg" alt="Posts-teacher" width="250"/>
+<img src="Images/PostsTE.jpg" alt="Posts-edit" width="250"/>
 
 ## Chat
 
-![Chat](Images/ChatS.jpg)
+<img src="Images/ChatS.jpg" alt="Chat" width="250"/>
 
 ## Profile
 
-![¨Profile](Images/Profile.jpg)
-![¨Profile-edit](Images/ProfileE.jpg)
+<img src="Images/Profile.jpg" alt="Profile" width="250"/>
+<img src="Images/ProfileE.jpg" alt="Profile-edit" width="250"/>
 
 # Get it yourself :
 
