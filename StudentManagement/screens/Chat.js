@@ -82,9 +82,9 @@ class Chat extends Component {
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       user: {
         _id: currentUser,
-        name: users[currentUser]?.full_name,
-        email: users[currentUser]?.email,
-        avatar: users[currentUser]?.image,
+        name: cUser.full_name,
+        email: cUser.email,
+        avatar: cUser.image,
       },
       userId: currentUser,
     };
